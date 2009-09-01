@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+	<sqlMap namespace="States">
+		
+		<!-- R E S U L T   M A P S -->
+		
+		<resultMap id="partialResult"
+			class="">
+			<result property="id" column="state_id" />
+			<result property="state" column="state" />
+			<result property="countryId" column="country_id" />
+		</resultMap>
+		
+		<resultMap id="fullResult"
+			class=""
+			extends="partialResult">
+			<result property="cities" column="{stateId=state_id}" select="Cities.selectAllForState"/>
+		</resultMap>
+
+		<!--  Q U E R I E S  -->
+
+		<insert id="insert">
+			INSERT INTO `states` (`state`,`country_id`)
+				VALUES (#state#,#countryId#)
+			<selectKey resultClass="int" keyProperty="id">
+   				SELECT LAST_INSERT_ID() AS id;
+ 			</selectKey>
+		</insert>
+
+		<update id="update">
+			UPDATE `states` SET
+				`state`=#state#,
+				`country_id`=#countryId#
+				WHERE `state_id`=#id#;	
+		</update>
+
+		<delete id="delete">
+			DELETE FROM `states`
+				WHERE `state_id`=#id#;
+		</delete>
+
+		<select id="select"
+			parameterClass="int"
+			resultMap="fullResult">
+			SELECT *
+				FROM `states`
+				WHERE `state_id`=#id#;
+		</select>
+		
+		<select id="selectAll"
+			parameterClass="array"
+			resultMap="fullResult">
+			SELECT *
+				FROM `states`
+				<iterate prepend="WHERE `state_id` IN " property="idList" open="(" close=")" conjunction=",">
+					#idList[]#
+				</iterate>
+				<isPropertyAvailable property="sort">
+					ORDER BY $sort$ $sortDir$
+				</isPropertyAvailable>
+		</select>
+		
+		<select id="selectAllForCountry"
+			parameterClass="int"
+			resultMap="fullResult">
+			SELECT *
+				FROM `states`
+				WHERE `country_id`=#countryId#;
+		</select>
+	</sqlMap>

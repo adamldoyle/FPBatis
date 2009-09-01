@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+
+<!DOCTYPE sqlMapConfig      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">    
+	
+<sqlMapConfig>
+
+	<!-- These settings control SqlMap configuration details, primarily to do with transaction            
+	management.  They are all optional (see the Developer Guide for more).  -->      
+	<settings/>
+	
+	<!-- Configure a datasource to use with this SQL Map using SimpleDataSource.           -->
+	<transactionManager type="JDBC" >      
+		<dataSource type="SIMPLE">        
+		   	<property name="JDBC.Driver" value="com.mysql.jdbc.Driver"/>
+			<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/fpbatis" />
+			<property name="JDBC.Username" value="root"/>        
+			<property name="JDBC.Password" value="admin"/> 
+		</dataSource>    	
+	</transactionManager>      
+	
+	<!-- Identify all SQL Map XML files to be loaded by this SQL map.  Notice the paths            
+	are relative to the classpath.   -->
+	<sqlMap resource="Cities.xml" /> 
+	<sqlMap resource="Comments.xml" /> 
+	<sqlMap resource="Countries.xml" />
+	<sqlMap resource="States.xml" />
+</sqlMapConfig>  
